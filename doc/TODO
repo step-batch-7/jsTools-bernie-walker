@@ -1,0 +1,16 @@
+implementing sort assuming all the inputs are right
+
+* implement sort for default behavior   
+    >> should take input of a filename and sort the content of it. 
+    >> should take in multiple files and sort the content of it. 
+    >> should take in the stdin and sort the content. 
+
+* add -r option to sort 
+    >> should reverse the sort. 
+    >> make it reverse the whole sorted data in the last step before output. 
+    
+* add -f option to the sort
+    >> should ignore the case of the input. 
+    >> change the case of the data before you send it in for sorting. 
+    >> 
+    
