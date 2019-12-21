@@ -1,0 +1,28 @@
+{
+  "name": "jstools-bernie-walker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/step-batch-7/jsTools-bernie-walker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/step-batch-7/jsTools-bernie-walker/issues"
+  },
+  "homepage": "https://github.com/step-batch-7/jsTools-bernie-walker#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1"
+  }
+}

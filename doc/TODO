@@ -1,16 +1,25 @@
-implementing sort assuming all the inputs are right
+v0.1
+ node sort filename
+ node sort 
 
-* implement sort for default behavior   
-    >> should take input of a filename and sort the content of it. 
-    >> should take in multiple files and sort the content of it. 
-    >> should take in the stdin and sort the content. 
+ Tasks:- 
 
-* add -r option to sort 
-    >> should reverse the sort. 
-    >> make it reverse the whole sorted data in the last step before output. 
+    * create src and test libraries. 
+    * create main and sortContent.
+    * write an appTest.
+    * read file content and sort it in sortContent.
+    * return the output and display from main.
+
+    * create a library loadData to read the content from the file. 
+    * send the read data in array.
+    * modify sortContent to accept content in arrays and map individual content.
+
+    * modify load data to accept standard input and send it in array if filename not mentioned.
     
-* add -f option to the sort
-    >> should ignore the case of the input. 
-    >> change the case of the data before you send it in for sorting. 
-    >> 
+    * create a library to accept the user input from main and format, and initialize the context. 
+    * send the output of this stage to loadData. 
     
+    * create a library to handleOutput and use this lib in main to display the output.  
+    * make this lib display error message or appropriate output based on the context.
+
+
