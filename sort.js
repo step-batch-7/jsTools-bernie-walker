@@ -1,19 +1,14 @@
-const fs = require("fs");
-const { sortContent } = require("./src/sort_content");
-const { loadContent } = require("./src/load_content");
-const { handleOutput } = require("./src/output_handler");
+const { readFileSync, existsSync } = require("fs");
+const { sortContent } = require("./src/sortContent");
 
 const main = function() {
-  const context = { fs, badFileError: false };
-  const content = loadContent.call(context, process.argv.slice(2));
-  const sortedContent = sortContent(content);
-
-  const { outputFunction, outputStream } = handleOutput.call(
-    context,
-    sortedContent
+  const fileSystem = { readFileSync, existsSync };
+  const { resultWriter, result } = sortContent.call(
+    { fileSystem },
+    process.argv[2]
   );
 
-  outputFunction(outputStream);
+  resultWriter(result);
 };
 
 main();
