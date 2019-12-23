@@ -10,11 +10,11 @@ v0.1
     --done-- read file content and sort it in sortContent.
     --done-- return the output and display from main.
 
-    * create a library loadData to read the content from the file. 
-    * send the read data in array.
-    * modify sortContent to accept content in arrays and map individual content.
+    --done-- create a library loadData to read the content from the file. 
+    --done-- send the read data in array.
+    --done-- modify sortContent to accept content in arrays and map individual content.
 
-    * modify load data to accept standard input and send it in array if filename not mentioned.
+   --later-- * modify load data to accept standard input and send it in array if filename not mentioned.
     
     * create a library to accept the user input from main and format, and initialize the context. 
     * send the output of this stage to loadData. 

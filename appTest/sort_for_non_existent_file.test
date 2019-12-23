@@ -1,0 +1,2 @@
+node sort.js nonExistingPath 2> errorStream.test.txt; cat errorStream.test.txt; rm errorStream.test.txt
+sort: No such file or directory

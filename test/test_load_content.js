@@ -12,7 +12,8 @@ describe("loadContent", function() {
           return `${file}Content\n`;
         },
         existsSync: name => !(name == "badFile")
-      }
+      },
+      badFileError: false
     };
   });
 
@@ -25,6 +26,11 @@ describe("loadContent", function() {
   it("should return an empty array when there is at least one bad filename", function() {
     const actual = loadContent.call(context, ["file1", "badFile"]);
     assert.deepStrictEqual(actual, []);
+  });
+
+  it("should set the badFileError falg in the context", function() {
+    loadContent.call(context, ["badFile"]);
+    assert.isTrue(context.badFileError);
   });
 
   it("should remove only one new line at the ending", function() {
