@@ -14,12 +14,12 @@ v0.1
     --done-- send the read data in array.
     --done-- modify sortContent to accept content in arrays and map individual content.
 
-   --later-- * modify load data to accept standard input and send it in array if filename not mentioned.
+   * modify load data to accept standard input and send it in array if filename not mentioned.
     
-    * create a library to accept the user input from main and format, and initialize the context. 
-    * send the output of this stage to loadData. 
+    --done-- create a library to accept the user input from main and format, and initialize the context. 
+    --done-- send the output of this stage to loadData. 
     
-    * create a library to handleOutput and use this lib in main to display the output.  
-    * make this lib display error message or appropriate output based on the context.
+    --done-- create a library to handleOutput and use this lib in main to display the output.  
+    --done-- make this lib display error message or appropriate output based on the context.
 
 

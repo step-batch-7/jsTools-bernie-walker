@@ -8,13 +8,12 @@ const main = function() {
   const content = loadContent.call(context, process.argv.slice(2));
   const sortedContent = sortContent(content);
 
-  const { errorStream, outputStream } = handleOutput.call(
+  const { outputFunction, outputStream } = handleOutput.call(
     context,
     sortedContent
   );
 
-  outputStream && console.log(outputStream);
-  errorStream && console.error(errorStream);
+  outputFunction(outputStream);
 };
 
 main();
