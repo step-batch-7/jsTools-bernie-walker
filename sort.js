@@ -12,7 +12,9 @@ const main = function() {
     context,
     sortedContent
   );
-  console.error(errorStream || outputStream);
+
+  outputStream && console.log(outputStream);
+  errorStream && console.error(errorStream);
 };
 
 main();
