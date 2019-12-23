@@ -1,9 +1,10 @@
 const fs = require("fs");
 const { sortContent } = require("./src/sort_content");
+const { loadContent } = require("./src/load_content");
 
 const main = function() {
-  const fileName = process.argv[2];
-  const content = [fs.readFileSync(fileName, "utf8").replace(/\n$/, "")];
+  const context = { fs };
+  const content = loadContent.call(context, process.argv.slice(2));
   const sortedContent = sortContent(content);
 
   console.log(sortedContent.join("\n"));

@@ -4,11 +4,11 @@ v0.1
 
  Tasks:- 
 
-    * create src and test libraries. 
-    * create main and sortContent.
-    * write an appTest.
-    * read file content and sort it in sortContent.
-    * return the output and display from main.
+    --done-- create src and test libraries. 
+    --done-- create main and sortContent.
+    --done-- write an appTest.
+    --done-- read file content and sort it in sortContent.
+    --done-- return the output and display from main.
 
     * create a library loadData to read the content from the file. 
     * send the read data in array.

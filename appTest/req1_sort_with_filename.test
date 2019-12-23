@@ -1,4 +1,4 @@
-node sort.js appTest/sort_data.txt
+node sort.js appTest/data/sort_data1.txt
 
 
 

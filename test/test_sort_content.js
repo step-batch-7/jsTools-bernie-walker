@@ -7,4 +7,10 @@ describe("sortContent", function() {
     const expected = ["1\nB\na\nc"];
     assert.deepStrictEqual(actual, expected);
   });
+
+  it("should consider white spaces as well", function() {
+    const actual = sortContent(["a\n1\n \nB\nc"]);
+    const expected = [" \n1\nB\na\nc"];
+    assert.deepStrictEqual();
+  });
 });

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "allTests": "nyc mocha && ./runAppTest.sh appTest/*.test"
+    "allTests": "mocha && ./runAppTest.sh appTest/*.test"
   },
   "repository": {
     "type": "git",
