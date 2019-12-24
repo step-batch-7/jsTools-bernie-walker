@@ -28,7 +28,7 @@ describe("loadFileContent", function() {
 
   beforeEach(function() {
     fileSystem = {
-      reader: fileName => {
+      read: fileName => {
         if (fileName == "badFile") throw "error";
         return `a\nb\nc\n`;
       },
@@ -37,19 +37,19 @@ describe("loadFileContent", function() {
   });
 
   it("should load the contents of the file if exists", function() {
-    const actual = loadFileContent.call(fileSystem, "file1");
+    const actual = loadFileContent(fileSystem, "file1");
     const expected = ["a", "b", "c"];
     assert.deepStrictEqual(actual, expected);
   });
 
   it("should throw an error if path doesn't exist", function() {
-    const actual = () => loadFileContent.call(fileSystem, "badFile");
+    const actual = () => loadFileContent(fileSystem, "badFile");
     assert.throw(actual, "error");
   });
 
   it("should trim only the last new line of the content if exists", function() {
-    fileSystem.reader = () => "1\nab\nx\n\n";
-    const actual = loadFileContent.call(fileSystem, "file1");
+    fileSystem.read = () => "1\nab\nx\n\n";
+    const actual = loadFileContent(fileSystem, "file1");
     const expected = ["1", "ab", "x", ""];
     assert.deepStrictEqual(actual, expected);
   });

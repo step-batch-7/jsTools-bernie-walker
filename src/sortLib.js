@@ -2,13 +2,9 @@ const sortContent = function(fileLines) {
   return fileLines.sort().join("\n");
 };
 
-const parseContent = function(fileContent) {
+const loadFileContent = function(fileSystem, fileName) {
+  const fileContent = fileSystem.read(fileName, fileSystem.encoding);
   return fileContent.replace(/\n$/, "").split("\n");
-};
-
-const loadFileContent = function(fileName) {
-  const fileContent = this.reader(fileName, this.encoding);
-  return parseContent(fileContent);
 };
 
 const generateError = function(errorCode) {
