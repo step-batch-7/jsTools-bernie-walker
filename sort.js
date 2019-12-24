@@ -1,14 +1,17 @@
-const { readFileSync, existsSync } = require("fs");
+const { readFileSync } = require("fs");
+const { loadFileContent } = require("./src/loadContent");
+const { generateError } = require("./src/sortUtils");
 const { sortContent } = require("./src/sortContent");
 
 const main = function() {
-  const fileSystem = { readFileSync, existsSync };
-  const { resultWriter, result } = sortContent.call(
-    { fileSystem },
-    process.argv[2]
-  );
+  const fileSystem = { reader: readFileSync, encoding: "utf8" };
 
-  resultWriter(result);
+  try {
+    const fileLines = loadFileContent.call(fileSystem, process.argv[2]);
+    console.log(sortContent(fileLines));
+  } catch (error) {
+    console.log(generateError(error.code));
+  }
 };
 
 main();
