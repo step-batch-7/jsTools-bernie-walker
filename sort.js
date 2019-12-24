@@ -1,7 +1,9 @@
 const { readFileSync } = require("fs");
-const { loadFileContent } = require("./src/loadContent");
-const { generateError } = require("./src/sortUtils");
-const { sortContent } = require("./src/sortContent");
+const {
+  sortContent,
+  loadFileContent,
+  generateError
+} = require("./src/sortLib");
 
 const main = function() {
   const fileSystem = { reader: readFileSync, encoding: "utf8" };
