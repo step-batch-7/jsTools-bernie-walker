@@ -10,7 +10,7 @@ const main = function() {
     const fileLines = loadFileContent.call(fileSystem, process.argv[2]);
     console.log(sortContent(fileLines));
   } catch (error) {
-    console.log(generateError(error.code));
+    console.error(generateError(error.code));
   }
 };
 

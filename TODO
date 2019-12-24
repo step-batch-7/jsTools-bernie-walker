@@ -1,0 +1,13 @@
+v0.2.0 
+node sort.js -r filename 
+node sort.js filename -r -r
+
+* problem with stdout and console.log
+
+* add -r option to the sort
+  * create a user argument parser(parseUserArgs) 
+  * change the input for sortContent from a string to object with fileLines and options array.
+  * add a validateUserArgs module.
+  
+* implement -r first for only -r appearing before filename (only two args)
+* extend it to -r appearing in any place
