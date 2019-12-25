@@ -1,19 +1,12 @@
-const { readFileSync } = require("fs");
-const {
-  sortContent,
-  loadFileContent,
-  generateError
-} = require("./src/sortLib");
+const { readFileSync, existsSync } = require("fs");
+const { sortContent, loadFileContent } = require("./src/sortLib");
 
 const main = function() {
-  const fileSystem = { read: readFileSync, encoding: "utf8" };
+  const fileSystem = { read: readFileSync, exists: existsSync };
+  const fileContent = loadFileContent(fileSystem, process.argv[2]);
 
-  try {
-    const fileLines = loadFileContent(fileSystem, process.argv[2]);
-    console.log(sortContent(fileLines));
-  } catch (error) {
-    console.error(generateError(error.code));
-  }
+  fileContent.error && console.error(fileContent.error);
+  fileContent.lines && console.log(sortContent(fileContent.lines));
 };
 
 main();

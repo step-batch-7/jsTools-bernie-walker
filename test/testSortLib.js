@@ -1,9 +1,5 @@
 const { assert } = require("chai");
-const {
-  sortContent,
-  loadFileContent,
-  generateError
-} = require("../src/sortLib");
+const { sortContent, loadFileContent } = require("../src/sortLib");
 
 describe("sortContent", function() {
   let lines;
@@ -29,41 +25,28 @@ describe("loadFileContent", function() {
   beforeEach(function() {
     fileSystem = {
       read: fileName => {
-        if (fileName == "badFile") throw "error";
         return `a\nb\nc\n`;
       },
-      encoding: "none"
+      exists: fileName => !(fileName == "badFile")
     };
   });
 
-  it("should load the contents of the file if exists", function() {
+  it("should load the lines of the file if exists", function() {
     const actual = loadFileContent(fileSystem, "file1");
-    const expected = ["a", "b", "c"];
+    const expected = { lines: ["a", "b", "c"] };
     assert.deepStrictEqual(actual, expected);
   });
 
-  it("should throw an error if path doesn't exist", function() {
-    const actual = () => loadFileContent(fileSystem, "badFile");
-    assert.throw(actual, "error");
+  it("should produce error if file doesn't exist", function() {
+    const actual = loadFileContent(fileSystem, "badFile");
+    const expected = { error: "sort: No such file or directory" };
+    assert.deepStrictEqual(actual, expected);
   });
 
-  it("should trim only the last new line of the content if exists", function() {
+  it("should trim only the last new line character of the content if present", function() {
     fileSystem.read = () => "1\nab\nx\n\n";
     const actual = loadFileContent(fileSystem, "file1");
-    const expected = ["1", "ab", "x", ""];
+    const expected = { lines: ["1", "ab", "x", ""] };
     assert.deepStrictEqual(actual, expected);
-  });
-});
-
-describe("generateError", function() {
-  it("should generate the error message for bad file path", function() {
-    const actual = generateError("ENOENT");
-    const expected = "sort: No such file or directory";
-    assert.strictEqual(actual, expected);
-  });
-  it("should generate the error for invalid argument", function() {
-    const actual = generateError("ERR_INVALID_ARG_TYPE");
-    const expected = "Error: invalid argument";
-    assert.strictEqual(actual, expected);
   });
 });

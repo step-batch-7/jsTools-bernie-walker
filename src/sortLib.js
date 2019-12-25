@@ -3,16 +3,13 @@ const sortContent = function(fileLines) {
 };
 
 const loadFileContent = function(fileSystem, fileName) {
-  const fileContent = fileSystem.read(fileName, fileSystem.encoding);
-  return fileContent.replace(/\n$/, "").split("\n");
+  if (!fileSystem.exists(fileName))
+    return { error: "sort: No such file or directory" };
+  const lines = fileSystem
+    .read(fileName, "utf8")
+    .replace(/\n$/, "")
+    .split("\n");
+  return { lines };
 };
 
-const generateError = function(errorCode) {
-  const errorCollection = {
-    ENOENT: "sort: No such file or directory",
-    ERR_INVALID_ARG_TYPE: "Error: invalid argument"
-  };
-  return errorCollection[errorCode];
-};
-
-module.exports = { sortContent, loadFileContent, generateError };
+module.exports = { sortContent, loadFileContent };
