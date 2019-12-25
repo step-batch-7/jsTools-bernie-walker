@@ -1,5 +1,9 @@
 const { assert } = require("chai");
-const { sortContent, loadFileContent } = require("../src/sortLib");
+const {
+  getResultAndWriter,
+  sortContent,
+  loadFileContent
+} = require("../src/sortLib");
 
 describe("sortContent", function() {
   let lines;
@@ -24,10 +28,10 @@ describe("loadFileContent", function() {
 
   beforeEach(function() {
     fileSystem = {
-      read: fileName => {
+      read: () => {
         return `a\nb\nc\n`;
       },
-      exists: fileName => !(fileName == "badFile")
+      exists: fileName => fileName != "badFile"
     };
   });
 
@@ -47,6 +51,34 @@ describe("loadFileContent", function() {
     fileSystem.read = () => "1\nab\nx\n\n";
     const actual = loadFileContent(fileSystem, "file1");
     const expected = { lines: ["1", "ab", "x", ""] };
+    assert.deepStrictEqual(actual, expected);
+  });
+});
+
+describe("getResultAndWriter", function() {
+  let fileSystem;
+
+  beforeEach(function() {
+    fileSystem = {
+      read: () => {
+        return `a\nc\nB\n1\n`;
+      },
+      exists: fileName => fileName != "badFile"
+    };
+  });
+
+  it("should generate error and writer pair given wrong file name", function() {
+    const actual = getResultAndWriter(fileSystem, "badFile");
+    const expected = {
+      writer: console.error,
+      result: "sort: No such file or directory"
+    };
+    assert.deepStrictEqual(actual, expected);
+  });
+
+  it("should generate the sorted result and writer pair when the path is right", function() {
+    const actual = getResultAndWriter(fileSystem, "file1");
+    const expected = { writer: console.log, result: "1\nB\na\nc" };
     assert.deepStrictEqual(actual, expected);
   });
 });

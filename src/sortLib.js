@@ -12,4 +12,20 @@ const loadFileContent = function(fileSystem, fileName) {
   return { lines };
 };
 
-module.exports = { sortContent, loadFileContent };
+const getResultAndWriter = function(fileSystem, userArgs) {
+  let writer, result;
+
+  const fileContent = loadFileContent(fileSystem, userArgs);
+
+  if (fileContent.error) {
+    writer = console.error;
+    result = fileContent.error;
+  } else {
+    writer = console.log;
+    result = sortContent(fileContent.lines);
+  }
+
+  return { writer, result };
+};
+
+module.exports = { getResultAndWriter, sortContent, loadFileContent };
