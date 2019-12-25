@@ -4,7 +4,7 @@ const { getResultAndWriter } = require("./src/sortLib");
 const main = function() {
   const fileSystem = { read: readFileSync, exists: existsSync };
 
-  resultAndWriter = getResultAndWriter(fileSystem, process.argv[2]);
+  const resultAndWriter = getResultAndWriter(fileSystem, process.argv[2]);
 
   resultAndWriter.writer(resultAndWriter.result);
 };
