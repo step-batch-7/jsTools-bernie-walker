@@ -18,10 +18,10 @@ const sort = function(fileSystem, userArgs) {
   const fileContent = loadFileContent(fileSystem, userArgs);
 
   if (fileContent.error) {
-    writer = "error";
+    writer = console.error;
     result = fileContent.error;
   } else {
-    writer = "log";
+    writer = console.log;
     result = sortContent(fileContent.lines);
   }
 

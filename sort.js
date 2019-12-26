@@ -6,7 +6,7 @@ const main = function() {
 
   const sortedLines = sort(fileSystem, process.argv[2]);
 
-  console[sortedLines.writer](sortedLines.result);
+  sortedLines.writer(sortedLines.result);
 };
 
 main();
