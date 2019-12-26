@@ -1,9 +1,5 @@
 const { assert } = require("chai");
-const {
-  getResultAndWriter,
-  sortContent,
-  loadFileContent
-} = require("../src/sortLib");
+const { performSort, sortContent, loadFileContent } = require("../src/sortLib");
 
 describe("sortContent", function() {
   let lines;
@@ -68,17 +64,17 @@ describe("getResultAndWriter", function() {
   });
 
   it("should generate error and writer pair given wrong file name", function() {
-    const actual = getResultAndWriter(fileSystem, "badFile");
+    const actual = performSort(fileSystem, "badFile");
     const expected = {
-      writer: console.error,
+      writer: "error",
       result: "sort: No such file or directory"
     };
     assert.deepStrictEqual(actual, expected);
   });
 
   it("should generate the sorted result and writer pair when the path is right", function() {
-    const actual = getResultAndWriter(fileSystem, "file1");
-    const expected = { writer: console.log, result: "1\nB\na\nc" };
+    const actual = performSort(fileSystem, "file1");
+    const expected = { writer: "log", result: "1\nB\na\nc" };
     assert.deepStrictEqual(actual, expected);
   });
 });

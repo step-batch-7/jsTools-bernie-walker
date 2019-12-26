@@ -18,6 +18,8 @@ runTest() {
     cat output.txt >> failures.txt
     echo "\n\t\t\t<= expected output =>" >> failures.txt
     cat expected.txt >> failures.txt
+    echo "\n\t\t\t<= difference =>" >> failures.txt
+    diff output.txt expected.txt >> failures.txt
   fi
   rm -f output.txt expected.txt
   echo "$result $test"

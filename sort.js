@@ -1,12 +1,12 @@
 const { readFileSync, existsSync } = require("fs");
-const { getResultAndWriter } = require("./src/sortLib");
+const { performSort } = require("./src/sortLib");
 
 const main = function() {
   const fileSystem = { read: readFileSync, exists: existsSync };
 
-  const resultAndWriter = getResultAndWriter(fileSystem, process.argv[2]);
+  const sorted = performSort(fileSystem, process.argv[2]);
 
-  resultAndWriter.writer(resultAndWriter.result);
+  console[sorted.writer](sorted.result);
 };
 
 main();
