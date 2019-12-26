@@ -12,7 +12,7 @@ const loadFileContent = function(fileSystem, fileName) {
   return { lines };
 };
 
-const performSort = function(fileSystem, userArgs) {
+const sort = function(fileSystem, userArgs) {
   let writer, result;
 
   const fileContent = loadFileContent(fileSystem, userArgs);
@@ -28,4 +28,4 @@ const performSort = function(fileSystem, userArgs) {
   return { writer, result };
 };
 
-module.exports = { performSort, sortContent, loadFileContent };
+module.exports = { sort, sortContent, loadFileContent };
