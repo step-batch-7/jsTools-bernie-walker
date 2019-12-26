@@ -28,4 +28,4 @@ const sort = function(fileSystem, userArgs) {
   return { writer, result };
 };
 
-module.exports = { sort, sortContent, loadFileContent };
+module.exports = { sort };
