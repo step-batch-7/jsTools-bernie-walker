@@ -13,20 +13,17 @@ node sort.js filename(emptyFile)
 ------------------------------------------------------------------------------------------------------------------
 
 v0.2.0 
-node sort.js -r filename 
-node sort.js -r filename -r -r
+node sort.js
+node sort.js < cat filename 
+cat filename | node sort.js
+node sort.js < echo "a\n1\nB"
 
-write appTestFor these above conditions first
+* write appTestFor these above conditions first
 
-* add -r option to the sort
-  * create a user argument parser(parseUserArgs) 
-  * change the input for sortContent from a string to object with fileLines and options array.
-  * add a validateUserArgs helper function for parseUserArgs. 
-  
-  * implement -r option in sortContent. 
-  * parameter input format for sortContent. 
-  
-  * include parseUserArgs in the flow. 
-  
-
-
+* add stdin to the sort.
+  * modify readFileSync to readFile and test.
+  * change the flow to be asynchronous.
+  * make loadFile responsible for displaying error. 
+  * add a branching to read from stdin in loadContent.
+  * test with having to read from stdin.
+    
