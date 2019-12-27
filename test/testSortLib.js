@@ -2,7 +2,7 @@ const { assert } = require("chai");
 const { sort } = require("../src/sortLib");
 
 describe("sort", function() {
-  let fileSystem;
+  let fileSystem, streamWriter, expected;
 
   beforeEach(function() {
     fileSystem = {
@@ -12,33 +12,35 @@ describe("sort", function() {
       },
       exists: fileName => fileName != "badFile"
     };
+
+    streamWriter = {
+      log: stream => {
+        assert.strictEqual(stream, expected);
+      },
+      error: stream => {
+        assert.strictEqual(stream, expected);
+      }
+    };
   });
 
   it("should generate error and writer pair given wrong file name", function() {
-    const actual = sort(fileSystem, "badFile");
-    const expected = {
-      writer: console.error,
-      result: "sort: No such file or directory"
-    };
-    assert.deepStrictEqual(actual, expected);
+    expected = "sort: No such file or directory";
+    sort(fileSystem, streamWriter, "badFile");
   });
 
   it("should generate the sorted result and writer pair when the path is right", function() {
-    const actual = sort(fileSystem, "file1");
-    const expected = { writer: console.log, result: "1\nB\na\nc" };
-    assert.deepStrictEqual(actual, expected);
+    expected = "1\nB\na\nc";
+    sort(fileSystem, streamWriter, "file1");
   });
 
   it("should ignore only the last new line character of the file content", function() {
     fileSystem.read = () => "1\nab\nx\n\n";
-    const actual = sort(fileSystem, "file1");
-    const expected = { writer: console.log, result: "\n1\nab\nx" };
-    assert.deepStrictEqual(actual, expected);
+    expected = "\n1\nab\nx";
+    sort(fileSystem, streamWriter, "file1");
   });
 
   it("should produce return the empty string when file content is empty", function() {
-    const actual = sort(fileSystem, "empty");
-    const expected = { writer: console.log, result: "" };
-    assert.deepStrictEqual(actual, expected);
+    expected = "";
+    sort(fileSystem, streamWriter, "empty");
   });
 });

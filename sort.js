@@ -3,10 +3,9 @@ const { sort } = require("./src/sortLib");
 
 const main = function() {
   const fileSystem = { read: readFileSync, exists: existsSync };
+  const streamWriter = { log: console.log, error: console.error };
 
-  const sortedLines = sort(fileSystem, process.argv[2]);
-
-  sortedLines.writer(sortedLines.result);
+  sort(fileSystem, streamWriter, process.argv[2]);
 };
 
 main();
