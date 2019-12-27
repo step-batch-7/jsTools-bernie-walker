@@ -17,9 +17,10 @@ const sort = function(fileSystem, streamWriter, userArgs) {
 
   if (fileContent.error) {
     streamWriter.error(fileContent.error);
-  } else {
-    streamWriter.log(sortContent(fileContent.lines));
+    return;
   }
+
+  streamWriter.log(sortContent(fileContent.lines));
 };
 
 module.exports = { sort };
