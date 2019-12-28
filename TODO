@@ -21,9 +21,13 @@ node sort.js < echo "a\n1\nB"
 * write appTestFor these above conditions first
 
 * add stdin to the sort.
+  
+  * try testing stdin.
+
+  * add a branching to read from stdin in loadContent.
+  * test with having to read from stdin.
+
   * modify readFileSync to readFile and test.
   * change the flow to be asynchronous.
   * make loadFile responsible for displaying error. 
-  * add a branching to read from stdin in loadContent.
-  * test with having to read from stdin.
     
