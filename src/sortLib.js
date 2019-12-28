@@ -1,14 +1,15 @@
 const sortContent = function(fileLines) {
-  return fileLines.sort().join("\n");
+  return fileLines.sort().join('\n');
 };
 
 const loadFileContent = function(fileSystem, fileName) {
-  if (!fileSystem.exists(fileName))
-    return { error: "sort: No such file or directory" };
+  if (!fileSystem.exists(fileName)) {
+    return { error: 'sort: No such file or directory' };
+  }
   const lines = fileSystem
-    .read(fileName, "utf8")
-    .replace(/\n$/, "")
-    .split("\n");
+    .read(fileName, 'utf8')
+    .replace(/\n$/, '')
+    .split('\n');
   return { lines };
 };
 
