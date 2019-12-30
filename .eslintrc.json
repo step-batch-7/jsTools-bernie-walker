@@ -60,5 +60,8 @@
     "no-proto": "error",
     "prefer-spread": "warn",
     "no-useless-call": "error"
-  }
+  },
+  "overrides": [
+    { "files": ["test*.js"], "rules": { "no-magic-numbers": "off" } }
+  ]
 }

@@ -11,19 +11,10 @@ describe('loadContent', function() {
     fakeCallback = sinon.spy();
     contentLoader = { readFile: () => {} };
     const stubbedRead = sinon.stub(contentLoader, 'readFile');
-    const callBackPosition = 2;
-    stubbedRead
-      .withArgs('file')
-      .callsArgWith(callBackPosition, null, 'sampleContent\n');
-    stubbedRead
-      .withArgs('badFile')
-      .callsArgWith(callBackPosition, { code: 'ENOENT' });
-    stubbedRead
-      .withArgs('dir')
-      .callsArgWith(callBackPosition, { code: 'EISDIR' });
-    stubbedRead
-      .withArgs('perm')
-      .callsArgWith(callBackPosition, { code: 'EACCES' });
+    stubbedRead.withArgs('file').callsArgWith(2, null, 'sampleContent\n');
+    stubbedRead.withArgs('badFile').callsArgWith(2, { code: 'ENOENT' });
+    stubbedRead.withArgs('dir').callsArgWith(2, { code: 'EISDIR' });
+    stubbedRead.withArgs('perm').callsArgWith(2, { code: 'EACCES' });
   });
 
   afterEach(function() {

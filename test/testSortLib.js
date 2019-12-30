@@ -10,17 +10,10 @@ describe('sort', function() {
     };
 
     const stubbedRead = sinon.stub(contentLoader, 'readFile');
-    const callBackPosition = 2;
-    stubbedRead
-      .withArgs('file1')
-      .callsArgWith(callBackPosition, null, 'a\nc\nB\n1\n');
-    stubbedRead
-      .withArgs('file2')
-      .callsArgWith(callBackPosition, null, '1\nab\nx\n\n');
-    stubbedRead.withArgs('empty').callsArgWith(callBackPosition, null, '');
-    stubbedRead
-      .withArgs('badFile')
-      .callsArgWith(callBackPosition, { code: 'ENOENT' });
+    stubbedRead.withArgs('file1').callsArgWith(2, null, 'a\nc\nB\n1\n');
+    stubbedRead.withArgs('file2').callsArgWith(2, null, '1\nab\nx\n\n');
+    stubbedRead.withArgs('empty').callsArgWith(2, null, '');
+    stubbedRead.withArgs('badFile').callsArgWith(2, { code: 'ENOENT' });
 
     const log = sinon.spy();
     const error = sinon.spy();
