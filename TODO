@@ -13,7 +13,7 @@ node sort.js filename(emptyFile)
 ------------------------------------------------------------------------------------------------------------------
 
 v0.2.0 
-node sort.js
+node sort.js *** how to test this case???
 node sort.js < cat filename 
 cat filename | node sort.js
 node sort.js < echo "a\n1\nB"
@@ -21,13 +21,11 @@ node sort.js < echo "a\n1\nB"
 * write appTestFor these above conditions first
 
 * add stdin to the sort.
-  
-  * try testing stdin.
-
-  * add a branching to read from stdin in loadContent.
-  * test with having to read from stdin.
 
   * modify readFileSync to readFile and test.
   * change the flow to be asynchronous.
+
+  * add a branching to read from stdin in loadContent.
+  * test with having to read from stdin.
   * make loadFile responsible for displaying error. 
     

@@ -1,0 +1,11 @@
+cat appTest/data/sortData1.txt | node sort.js 
+
+
+
+
+
+
+1
+12
+B
+ab
