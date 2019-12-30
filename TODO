@@ -18,7 +18,7 @@ node sort.js < cat filename
 cat filename | node sort.js
 node sort.js < echo "a\n1\nB"
 
-* write appTestFor these above conditions first
+--done-- write appTestFor these above conditions first
 
 * add stdin to the sort.
 
