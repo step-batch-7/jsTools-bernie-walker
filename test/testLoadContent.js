@@ -12,9 +12,9 @@ describe('loadContent', function() {
     contentLoader = { readFile: () => {} };
     const stubbedRead = sinon.stub(contentLoader, 'readFile');
     stubbedRead.withArgs('file').callsArgWith(2, null, 'sampleContent\n');
-    stubbedRead
-      .withArgs('badFile')
-      .callsArgWith(2, 'sort: No such file or directory');
+    stubbedRead.withArgs('badFile').callsArgWith(2, { code: 'ENOENT' });
+    stubbedRead.withArgs('dir').callsArgWith(2, { code: 'EISDIR' });
+    stubbedRead.withArgs('perm').callsArgWith(2, { code: 'EACCES' });
   });
 
   afterEach(function() {
@@ -35,5 +35,15 @@ describe('loadContent', function() {
   it('should throw an error for a bad fileName', function() {
     loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
     sinon.assert.calledWith(error, 'sort: No such file or directory');
+  });
+
+  it('should give error when given fileName isa directory', function() {
+    loadContent({ contentLoader, streamWriter }, 'dir', fakeCallback);
+    sinon.assert.calledWith(error, 'sort: Is a directory');
+  });
+
+  it('should give error when the file has no read permission', function() {
+    loadContent({ contentLoader, streamWriter }, 'perm', fakeCallback);
+    sinon.assert.calledWith(error, 'sort: Permission denied');
   });
 });

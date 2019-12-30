@@ -1,0 +1,2 @@
+chmod -r appTest/data/emptyFile.txt; node sort.js appTest/data/emptyFile.txt; chmod +r appTest/data/emptyFile.txt
+sort: Permission denied

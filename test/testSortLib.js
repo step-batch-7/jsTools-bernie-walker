@@ -13,7 +13,7 @@ describe('sort', function() {
     stubbedRead.withArgs('file1').callsArgWith(2, null, 'a\nc\nB\n1\n');
     stubbedRead.withArgs('file2').callsArgWith(2, null, '1\nab\nx\n\n');
     stubbedRead.withArgs('empty').callsArgWith(2, null, '');
-    stubbedRead.withArgs('badFile').callsArgWith(2, 'error');
+    stubbedRead.withArgs('badFile').callsArgWith(2, { code: 'ENOENT' });
 
     const log = sinon.spy();
     const error = sinon.spy();
