@@ -11,39 +11,56 @@ describe('loadContent', function() {
     fakeCallback = sinon.spy();
     contentLoader = { readFile: () => {} };
     const stubbedRead = sinon.stub(contentLoader, 'readFile');
-    stubbedRead.withArgs('file').callsArgWith(2, null, 'sampleContent\n');
-    stubbedRead.withArgs('badFile').callsArgWith(2, { code: 'ENOENT' });
-    stubbedRead.withArgs('dir').callsArgWith(2, { code: 'EISDIR' });
-    stubbedRead.withArgs('perm').callsArgWith(2, { code: 'EACCES' });
+    stubbedRead.withArgs('file').callsArgWithAsync(2, null, 'sampleContent\n');
+    stubbedRead.withArgs('badFile').callsArgWithAsync(2, { code: 'ENOENT' });
+    stubbedRead.withArgs('dir').callsArgWithAsync(2, { code: 'EISDIR' });
+    stubbedRead.withArgs('perm').callsArgWithAsync(2, { code: 'EACCES' });
   });
 
   afterEach(function() {
     sinon.restore();
   });
 
-  it('should callback with lines of the file if exists', function() {
+  it('should callback with lines of the file if exists', function(done) {
     loadContent({ contentLoader, streamWriter }, 'file', fakeCallback);
-    sinon.assert.called(fakeCallback);
-    sinon.assert.calledWith(fakeCallback, streamWriter.log, ['sampleContent']);
+    setTimeout(() => {
+      sinon.assert.called(fakeCallback);
+      sinon.assert.calledWith(fakeCallback, streamWriter.log, [
+        'sampleContent'
+      ]);
+      done();
+    });
+  }, 0);
+
+  it('should not call the callBack for a badFileName', function(done) {
+    setTimeout(() => {
+      loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
+      sinon.assert.notCalled(fakeCallback);
+      done();
+    }, 0);
   });
 
-  it('should not call the callBack for a badFileName', function() {
+  it('should throw an error for a bad fileName', function(done) {
     loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
-    sinon.assert.notCalled(fakeCallback);
+    setTimeout(() => {
+      sinon.assert.calledWith(error, 'sort: No such file or directory');
+      done();
+    }, 0);
   });
 
-  it('should throw an error for a bad fileName', function() {
-    loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
-    sinon.assert.calledWith(error, 'sort: No such file or directory');
-  });
-
-  it('should give error when given fileName isa directory', function() {
+  it('should give error when given fileName isa directory', function(done) {
     loadContent({ contentLoader, streamWriter }, 'dir', fakeCallback);
-    sinon.assert.calledWith(error, 'sort: Is a directory');
+    setTimeout(() => {
+      sinon.assert.calledWith(error, 'sort: Is a directory');
+      done();
+    }, 0);
   });
 
-  it('should give error when the file has no read permission', function() {
+  it('should give error when the file has no read permission', function(done) {
     loadContent({ contentLoader, streamWriter }, 'perm', fakeCallback);
-    sinon.assert.calledWith(error, 'sort: Permission denied');
+    setTimeout(() => {
+      sinon.assert.calledWith(error, 'sort: Permission denied');
+      done();
+    }, 0);
   });
 });
