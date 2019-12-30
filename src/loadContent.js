@@ -1,12 +1,11 @@
-const loadFileContent = function(fileSystem, fileName) {
-  if (!fileSystem.exists(fileName)) {
-    return { error: 'sort: No such file or directory' };
-  }
-  const lines = fileSystem
-    .read(fileName, 'utf8')
-    .replace(/\n$/, '')
-    .split('\n');
-  return { lines };
-};
+const loadContent = function(sortUtils, fileName, callBack) {
+  sortUtils.contentLoader.readFile(fileName, 'utf8', (error, data) => {
+    if (error) {
+      sortUtils.streamWriter.error('sort: No such file or directory');
+      return;
+    }
 
-module.exports = { loadFileContent };
+    callBack(sortUtils.streamWriter.log, data.replace(/\n$/, '').split('\n'));
+  });
+};
+module.exports = { loadContent };

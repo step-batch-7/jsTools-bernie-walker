@@ -1,18 +1,11 @@
-const { loadFileContent } = require('./loadContent');
+const { loadContent } = require('./loadContent');
 
-const sortContent = function(fileLines) {
-  return fileLines.sort().join('\n');
+const sortContent = function(writer, fileLines) {
+  writer(fileLines.sort().join('\n'));
 };
 
-const sort = function(fileSystem, streamWriter, userArgs) {
-  const fileContent = loadFileContent(fileSystem, userArgs);
-
-  if (fileContent.error) {
-    streamWriter.error(fileContent.error);
-    return;
-  }
-
-  streamWriter.log(sortContent(fileContent.lines));
+const sort = function(sortUtils, userArgs) {
+  loadContent(sortUtils, userArgs, sortContent);
 };
 
 module.exports = { sort };

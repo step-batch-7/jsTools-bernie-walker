@@ -2,20 +2,18 @@ const sinon = require('sinon');
 const { sort } = require('../src/sortLib');
 
 describe('sort', function() {
-  let fileSystem, streamWriter;
+  let contentLoader, streamWriter;
 
   beforeEach(function() {
-    fileSystem = {
-      read: () => {},
-      exists: () => {}
+    contentLoader = {
+      readFile: () => {}
     };
 
-    const stubbedRead = sinon.stub(fileSystem, 'read');
-    stubbedRead.withArgs('file1').returns('a\nc\nB\n1\n');
-    stubbedRead.withArgs('empty').returns('');
-    const stubbedExists = sinon.stub(fileSystem, 'exists');
-    stubbedExists.returns(true);
-    stubbedExists.withArgs('badFile').returns(false);
+    const stubbedRead = sinon.stub(contentLoader, 'readFile');
+    stubbedRead.withArgs('file1').callsArgWith(2, null, 'a\nc\nB\n1\n');
+    stubbedRead.withArgs('file2').callsArgWith(2, null, '1\nab\nx\n\n');
+    stubbedRead.withArgs('empty').callsArgWith(2, null, '');
+    stubbedRead.withArgs('badFile').callsArgWith(2, 'error');
 
     const log = sinon.spy();
     const error = sinon.spy();
@@ -27,28 +25,27 @@ describe('sort', function() {
     sinon.restore();
   });
 
-  it('should generate error and writer pair given wrong file name', function() {
+  it('should generate error given wrong file name', function() {
     const expected = 'sort: No such file or directory';
-    sort(fileSystem, streamWriter, 'badFile');
+    sort({ contentLoader, streamWriter }, 'badFile');
     sinon.assert.calledWith(streamWriter.error, expected);
   });
 
-  it('should produce result and writer when the path is right', function() {
+  it('should produce sorted result when the path is right', function() {
     const expected = '1\nB\na\nc';
-    sort(fileSystem, streamWriter, 'file1');
+    sort({ contentLoader, streamWriter }, 'file1');
     sinon.assert.calledWith(streamWriter.log, expected);
   });
 
   it('should ignore only the last new line of the file content', function() {
-    sinon.replace(fileSystem, 'read', () => '1\nab\nx\n\n');
     const expected = '\n1\nab\nx';
-    sort(fileSystem, streamWriter, 'file2');
+    sort({ contentLoader, streamWriter }, 'file2');
     sinon.assert.calledWith(streamWriter.log, expected);
   });
 
   it('should produce the empty string when file content is empty', function() {
     const expected = '';
-    sort(fileSystem, streamWriter, 'empty');
+    sort({ contentLoader, streamWriter }, 'empty');
     sinon.assert.calledWith(streamWriter.log, expected);
   });
 });
