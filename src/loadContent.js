@@ -8,7 +8,7 @@ const generateError = function(code) {
   return `sort: ${lookup[code]}`;
 };
 
-const loadFromFile = function(utils, fileName, callBack) {
+const loadFromFile = function(fileName, utils, callBack) {
   utils.readFile(fileName, 'utf8', (error, data) => {
     if (error) {
       utils.streamWriter.error(generateError(error.code));
@@ -32,14 +32,14 @@ const readStdin = function(utils, callBack) {
   );
 };
 
-const loadContent = function(sortUtils, fileName, callBack) {
+const loadContent = function(fileName, sortUtils, callBack) {
   const streamWriter = sortUtils.streamWriter;
   const stdin = sortUtils.contentLoader.stdin;
   const log = streamWriter.log;
   const readFile = sortUtils.contentLoader.readFile;
 
   if (fileName) {
-    loadFromFile({ readFile, streamWriter }, fileName, callBack);
+    loadFromFile(fileName, { readFile, streamWriter }, callBack);
   } else {
     readStdin({ stdin, log }, callBack);
   }

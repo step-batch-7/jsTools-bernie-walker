@@ -5,7 +5,7 @@ const sortContent = function(lines, writer) {
 };
 
 const sort = function(userArgs, sortUtils) {
-  loadContent(sortUtils, userArgs, sortContent);
+  loadContent(userArgs, sortUtils, sortContent);
 };
 
 module.exports = { sort };

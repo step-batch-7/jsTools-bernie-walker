@@ -27,7 +27,7 @@ describe('loadContent', function() {
     });
 
     it('should callback with lines of the file if exists', function(done) {
-      loadContent({ contentLoader, streamWriter }, 'file', fakeCallback);
+      loadContent('file', { contentLoader, streamWriter }, fakeCallback);
       setTimeout(() => {
         sinon.assert.called(fakeCallback);
         sinon.assert.calledWith(
@@ -40,7 +40,7 @@ describe('loadContent', function() {
     }, 0);
 
     it('should not call the callBack for a badFileName', function(done) {
-      loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
+      loadContent('badFile', { contentLoader, streamWriter }, fakeCallback);
       setTimeout(() => {
         sinon.assert.notCalled(fakeCallback);
         done();
@@ -48,7 +48,7 @@ describe('loadContent', function() {
     });
 
     it('should throw an error for a bad fileName', function(done) {
-      loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
+      loadContent('badFile', { contentLoader, streamWriter }, fakeCallback);
       setTimeout(() => {
         sinon.assert.calledWith(error, 'sort: No such file or directory');
         done();
@@ -56,7 +56,7 @@ describe('loadContent', function() {
     });
 
     it('should give error when given fileName isa directory', function(done) {
-      loadContent({ contentLoader, streamWriter }, 'dir', fakeCallback);
+      loadContent('dir', { contentLoader, streamWriter }, fakeCallback);
       setTimeout(() => {
         sinon.assert.calledWith(error, 'sort: Is a directory');
         done();
@@ -64,7 +64,7 @@ describe('loadContent', function() {
     });
 
     it('should give error when the file has no read permission', function(done) {
-      loadContent({ contentLoader, streamWriter }, 'perm', fakeCallback);
+      loadContent('perm', { contentLoader, streamWriter }, fakeCallback);
       setTimeout(() => {
         sinon.assert.calledWith(error, 'sort: Permission denied');
         done();
@@ -85,18 +85,18 @@ describe('loadContent', function() {
     });
 
     it('should set encoding for stdin', function() {
-      loadContent({ contentLoader, streamWriter }, undefined, fakeCallback);
+      loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
       sinon.assert.calledWith(contentLoader.stdin.setEncoding, 'utf8');
     });
 
     it('should add handlers for data and close event', function() {
-      loadContent({ contentLoader, streamWriter }, undefined, fakeCallback);
+      loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
       assert.strictEqual(contentLoader.stdin.on.firstCall.args[0], 'data');
       assert.strictEqual(contentLoader.stdin.on.secondCall.args[0], 'end');
     });
 
     it('on should be called only twice and setEncoding only once', function() {
-      loadContent({ contentLoader, streamWriter }, undefined, fakeCallback);
+      loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
       sinon.assert.calledOnce(contentLoader.stdin.setEncoding);
       sinon.assert.calledTwice(contentLoader.stdin.on);
     });
@@ -105,7 +105,7 @@ describe('loadContent', function() {
       const stdin = new EventEmitter();
       stdin.setEncoding = () => {};
       contentLoader = { stdin };
-      loadContent({ contentLoader, streamWriter }, undefined, fakeCallback);
+      loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
       stdin.emit('data', 'hello\n');
       stdin.emit('data', 'world\n');
       stdin.emit('end');
