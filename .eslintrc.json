@@ -68,7 +68,8 @@
       "files": ["test*.js"],
       "rules": {
         "no-magic-numbers": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "max-statements": "off"
       }
     }
   ]
