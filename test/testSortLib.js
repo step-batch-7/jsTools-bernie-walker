@@ -27,7 +27,7 @@ describe('sort', function() {
 
   it('should generate error given wrong file name', function(done) {
     const expected = 'sort: No such file or directory';
-    sort({ contentLoader, streamWriter }, 'badFile');
+    sort('badFile', { contentLoader, streamWriter });
     setTimeout(() => {
       sinon.assert.calledWith(streamWriter.error, expected);
       done();
@@ -36,7 +36,7 @@ describe('sort', function() {
 
   it('should produce sorted result when the path is right', function(done) {
     const expected = '1\nB\na\nc';
-    sort({ contentLoader, streamWriter }, 'file1');
+    sort('file1', { contentLoader, streamWriter });
     setTimeout(() => {
       sinon.assert.calledWith(streamWriter.log, expected);
       done();
@@ -45,7 +45,7 @@ describe('sort', function() {
 
   it('should ignore only the last newLine of the fileContent', function(done) {
     const expected = '\n1\nab\nx';
-    sort({ contentLoader, streamWriter }, 'file2');
+    sort('file2', { contentLoader, streamWriter });
     setTimeout(() => {
       sinon.assert.calledWith(streamWriter.log, expected);
       done();
@@ -54,7 +54,7 @@ describe('sort', function() {
 
   it('should produce the empty string for empty file', function(done) {
     const expected = '';
-    sort({ contentLoader, streamWriter }, 'empty');
+    sort('empty', { contentLoader, streamWriter });
     setTimeout(() => {
       sinon.assert.calledWith(streamWriter.log, expected);
       done();

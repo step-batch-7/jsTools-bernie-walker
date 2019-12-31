@@ -15,7 +15,7 @@ const loadFromFile = function(utils, fileName, callBack) {
       return;
     }
 
-    callBack(utils.streamWriter.log, data.replace(/\n$/, '').split('\n'));
+    callBack(data.replace(/\n$/, '').split('\n'), utils.streamWriter.log);
   });
 };
 
@@ -28,22 +28,21 @@ const readStdin = function(utils, callBack) {
   });
 
   utils.stdin.on('end', () =>
-    callBack(utils.log, content.replace(/\n$/, '').split('\n'))
+    callBack(content.replace(/\n$/, '').split('\n'), utils.log)
   );
 };
 
 const loadContent = function(sortUtils, fileName, callBack) {
   const streamWriter = sortUtils.streamWriter;
-
-  if (fileName === undefined) {
-    const stdin = sortUtils.contentLoader.stdin;
-    const log = streamWriter.log;
-    readStdin({ stdin, log }, callBack);
-    return;
-  }
-
+  const stdin = sortUtils.contentLoader.stdin;
+  const log = streamWriter.log;
   const readFile = sortUtils.contentLoader.readFile;
-  loadFromFile({ readFile, streamWriter }, fileName, callBack);
+
+  if (fileName) {
+    loadFromFile({ readFile, streamWriter }, fileName, callBack);
+  } else {
+    readStdin({ stdin, log }, callBack);
+  }
 };
 
 module.exports = { loadContent };

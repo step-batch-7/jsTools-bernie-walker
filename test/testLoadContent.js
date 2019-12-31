@@ -30,9 +30,11 @@ describe('loadContent', function() {
       loadContent({ contentLoader, streamWriter }, 'file', fakeCallback);
       setTimeout(() => {
         sinon.assert.called(fakeCallback);
-        sinon.assert.calledWith(fakeCallback, streamWriter.log, [
-          'sampleContent'
-        ]);
+        sinon.assert.calledWith(
+          fakeCallback,
+          ['sampleContent'],
+          streamWriter.log
+        );
         done();
       });
     }, 0);
@@ -108,7 +110,7 @@ describe('loadContent', function() {
       stdin.emit('data', 'world\n');
       stdin.emit('end');
       sinon.assert.calledOnce(fakeCallback);
-      assert.deepStrictEqual(fakeCallback.args[0][1], ['hello', 'world']);
+      assert.deepStrictEqual(fakeCallback.args[0][0], ['hello', 'world']);
     });
   });
 });

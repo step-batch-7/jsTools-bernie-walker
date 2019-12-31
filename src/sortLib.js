@@ -1,10 +1,10 @@
 const { loadContent } = require('./loadContent');
 
-const sortContent = function(writer, lines) {
+const sortContent = function(lines, writer) {
   writer(lines.sort().join('\n'));
 };
 
-const sort = function(sortUtils, userArgs) {
+const sort = function(userArgs, sortUtils) {
   loadContent(sortUtils, userArgs, sortContent);
 };
 
