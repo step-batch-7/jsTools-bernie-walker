@@ -1,4 +1,0 @@
-node sort.js < echo "a\n1\nB"
-1
-B
-a

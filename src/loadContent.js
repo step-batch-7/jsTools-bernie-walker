@@ -8,14 +8,42 @@ const generateError = function(code) {
   return `sort: ${lookup[code]}`;
 };
 
-const loadContent = function(sortUtils, fileName, callBack) {
-  sortUtils.contentLoader.readFile(fileName, 'utf8', (error, data) => {
+const loadFromFile = function(utils, fileName, callBack) {
+  utils.readFile(fileName, 'utf8', (error, data) => {
     if (error) {
-      sortUtils.streamWriter.error(generateError(error.code));
+      utils.streamWriter.error(generateError(error.code));
       return;
     }
 
-    callBack(sortUtils.streamWriter.log, data.replace(/\n$/, '').split('\n'));
+    callBack(utils.streamWriter.log, data.replace(/\n$/, '').split('\n'));
   });
 };
+
+const readStdin = function(utils, callBack) {
+  let content = '';
+  utils.stdin.setEncoding('utf8');
+
+  utils.stdin.on('data', chunk => {
+    content += chunk;
+  });
+
+  utils.stdin.on('end', () =>
+    callBack(utils.log, content.replace(/\n$/, '').split('\n'))
+  );
+};
+
+const loadContent = function(sortUtils, fileName, callBack) {
+  const streamWriter = sortUtils.streamWriter;
+
+  if (fileName === undefined) {
+    const stdin = sortUtils.contentLoader.stdin;
+    const log = streamWriter.log;
+    readStdin({ stdin, log }, callBack);
+    return;
+  }
+
+  const readFile = sortUtils.contentLoader.readFile;
+  loadFromFile({ readFile, streamWriter }, fileName, callBack);
+};
+
 module.exports = { loadContent };
