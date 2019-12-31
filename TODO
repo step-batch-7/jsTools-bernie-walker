@@ -20,12 +20,12 @@ node sort.js < echo "a\n1\nB"
 
 --done-- write appTestFor these above conditions first
 
-* add stdin to the sort.
+--done-- add stdin to the sort.
 
-  * modify readFileSync to readFile and test.
-  * change the flow to be asynchronous.
+  --done-- modify readFileSync to readFile and test.
+  --done-- change the flow to be asynchronous.
 
-  * add a branching to read from stdin in loadContent.
-  * test with having to read from stdin.
-  * make loadFile responsible for displaying error. 
+  --done-- add a branching to read from stdin in loadContent.
+  --done-- test with having to read from stdin.
+  --done-- make loadFile responsible for displaying error. 
     
