@@ -33,8 +33,8 @@ describe('loadContent', function() {
   }, 0);
 
   it('should not call the callBack for a badFileName', function(done) {
+    loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
     setTimeout(() => {
-      loadContent({ contentLoader, streamWriter }, 'badFile', fakeCallback);
       sinon.assert.notCalled(fakeCallback);
       done();
     }, 0);
