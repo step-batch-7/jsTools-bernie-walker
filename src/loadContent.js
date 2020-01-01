@@ -32,17 +32,4 @@ const readStdin = function(utils, callBack) {
   );
 };
 
-const loadContent = function(fileName, sortUtils, callBack) {
-  const streamWriter = sortUtils.streamWriter;
-  const stdin = sortUtils.contentLoader.stdin;
-  const log = streamWriter.log;
-  const readFile = sortUtils.contentLoader.readFile;
-
-  if (fileName) {
-    loadFromFile(fileName, { readFile, streamWriter }, callBack);
-  } else {
-    readStdin({ stdin, log }, callBack);
-  }
-};
-
-module.exports = { loadContent };
+module.exports = { loadFromFile, readStdin };
