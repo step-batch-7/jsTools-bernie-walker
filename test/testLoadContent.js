@@ -1,116 +1,111 @@
-// const EventEmitter = require('events');
-// const { assert } = require('chai');
-// const sinon = require('sinon');
-// const { loadContent } = require('../src/loadContent');
+const EventEmitter = require('events');
+const { assert } = require('chai');
+const sinon = require('sinon');
+const { loadFromFile, readStdin } = require('../src/loadContent');
 
-// describe('loadContent', function() {
-//   describe('loadFromFile', function() {
-//     let contentLoader, fakeCallback, streamWriter, error;
+describe('loadContent', function() {
+  describe('loadFromFile', function() {
+    let readFile, fakeCallback, streamWriter, error;
 
-//     beforeEach(function() {
-//       error = sinon.spy();
-//       streamWriter = { error, log: () => {} };
+    beforeEach(function() {
+      error = sinon.spy();
+      streamWriter = { error, log: () => {} };
 
-//       fakeCallback = sinon.spy();
-//       contentLoader = { readFile: () => {} };
-//       const stubbedRead = sinon.stub(contentLoader, 'readFile');
-//       stubbedRead
-//         .withArgs('file')
-//         .callsArgWithAsync(2, null, 'sampleContent\n');
-//       stubbedRead.withArgs('badFile').callsArgWithAsync(2, { code: 'ENOENT' });
-//       stubbedRead.withArgs('dir').callsArgWithAsync(2, { code: 'EISDIR' });
-//       stubbedRead.withArgs('perm').callsArgWithAsync(2, { code: 'EACCES' });
-//     });
+      fakeCallback = sinon.spy();
+      readFile = sinon.stub();
+      readFile.withArgs('file').callsArgWithAsync(2, null, 'sampleContent\n');
+      readFile.withArgs('badFile').callsArgWithAsync(2, { code: 'ENOENT' });
+      readFile.withArgs('dir').callsArgWithAsync(2, { code: 'EISDIR' });
+      readFile.withArgs('perm').callsArgWithAsync(2, { code: 'EACCES' });
+    });
 
-//     afterEach(function() {
-//       sinon.restore();
-//     });
+    afterEach(function() {
+      sinon.restore();
+    });
 
-//     it('should callback with lines of the file if exists', function(done) {
-//       loadContent('file', { contentLoader, streamWriter }, fakeCallback);
-//       setTimeout(() => {
-//         sinon.assert.called(fakeCallback);
-//         sinon.assert.calledWith(
-//           fakeCallback,
-//           ['sampleContent'],
-//           streamWriter.log
-//         );
-//         done();
-//       });
-//     }, 0);
+    it('should callback with lines of the file if exists', function(done) {
+      loadFromFile('file', { readFile, streamWriter }, fakeCallback);
+      setTimeout(() => {
+        sinon.assert.called(fakeCallback);
+        sinon.assert.calledWith(
+          fakeCallback,
+          ['sampleContent'],
+          streamWriter.log
+        );
+        done();
+      });
+    }, 0);
 
-//     it('should not call the callBack for a badFileName', function(done) {
-//       loadContent('badFile', { contentLoader, streamWriter }, fakeCallback);
-//       setTimeout(() => {
-//         sinon.assert.notCalled(fakeCallback);
-//         done();
-//       }, 0);
-//     });
+    it('should not call the callBack for a badFileName', function(done) {
+      loadFromFile('badFile', { readFile, streamWriter }, fakeCallback);
+      setTimeout(() => {
+        sinon.assert.notCalled(fakeCallback);
+        done();
+      }, 0);
+    });
 
-//     it('should throw an error for a bad fileName', function(done) {
-//       loadContent('badFile', { contentLoader, streamWriter }, fakeCallback);
-//       setTimeout(() => {
-//         sinon.assert.calledWith(error, 'sort: No such file or directory');
-//         done();
-//       }, 0);
-//     });
+    it('should throw an error for a bad fileName', function(done) {
+      loadFromFile('badFile', { readFile, streamWriter }, fakeCallback);
+      setTimeout(() => {
+        sinon.assert.calledWith(error, 'sort: No such file or directory');
+        done();
+      }, 0);
+    });
 
-//     it('should give error when given fileName isa directory', function(done) {
-//       loadContent('dir', { contentLoader, streamWriter }, fakeCallback);
-//       setTimeout(() => {
-//         sinon.assert.calledWith(error, 'sort: Is a directory');
-//         done();
-//       }, 0);
-//     });
+    it('should give error when given fileName isa directory', function(done) {
+      loadFromFile('dir', { readFile, streamWriter }, fakeCallback);
+      setTimeout(() => {
+        sinon.assert.calledWith(error, 'sort: Is a directory');
+        done();
+      }, 0);
+    });
 
-//     it('should give error when the file has no read permission', function(done) {
-//       loadContent('perm', { contentLoader, streamWriter }, fakeCallback);
-//       setTimeout(() => {
-//         sinon.assert.calledWith(error, 'sort: Permission denied');
-//         done();
-//       }, 0);
-//     });
-//   });
+    it('should give error when the file has no read permission', function(done) {
+      loadFromFile('perm', { readFile, streamWriter }, fakeCallback);
+      setTimeout(() => {
+        sinon.assert.calledWith(error, 'sort: Permission denied');
+        done();
+      }, 0);
+    });
+  });
 
-//   describe('readStdin', function() {
-//     let contentLoader, fakeCallback, streamWriter, error;
+  describe('readStdin', function() {
+    let stdin, fakeCallback, streamWriter, error;
 
-//     beforeEach(function() {
-//       error = sinon.spy();
-//       streamWriter = { error, log: () => {} };
+    beforeEach(function() {
+      error = sinon.spy();
+      streamWriter = { error, log: () => {} };
 
-//       fakeCallback = sinon.spy();
-//       const stdin = { setEncoding: sinon.spy(), on: sinon.spy() };
-//       contentLoader = { stdin };
-//     });
+      fakeCallback = sinon.spy();
+      stdin = { setEncoding: sinon.spy(), on: sinon.spy() };
+    });
 
-//     it('should set encoding for stdin', function() {
-//       loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
-//       sinon.assert.calledWith(contentLoader.stdin.setEncoding, 'utf8');
-//     });
+    it('should set encoding for stdin', function() {
+      readStdin({ stdin, streamWriter }, fakeCallback);
+      sinon.assert.calledWith(stdin.setEncoding, 'utf8');
+    });
 
-//     it('should add handlers for data and close event', function() {
-//       loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
-//       assert.strictEqual(contentLoader.stdin.on.firstCall.args[0], 'data');
-//       assert.strictEqual(contentLoader.stdin.on.secondCall.args[0], 'end');
-//     });
+    it('should add handlers for data and close event', function() {
+      readStdin({ stdin, streamWriter }, fakeCallback);
+      assert.strictEqual(stdin.on.firstCall.args[0], 'data');
+      assert.strictEqual(stdin.on.secondCall.args[0], 'end');
+    });
 
-//     it('on should be called only twice and setEncoding only once', function() {
-//       loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
-//       sinon.assert.calledOnce(contentLoader.stdin.setEncoding);
-//       sinon.assert.calledTwice(contentLoader.stdin.on);
-//     });
+    it('on should be called only twice and setEncoding only once', function() {
+      readStdin({ stdin, streamWriter }, fakeCallback);
+      sinon.assert.calledOnce(stdin.setEncoding);
+      sinon.assert.calledTwice(stdin.on);
+    });
 
-//     it('should call the callback once with the content', function() {
-//       const stdin = new EventEmitter();
-//       stdin.setEncoding = () => {};
-//       contentLoader = { stdin };
-//       loadContent(undefined, { contentLoader, streamWriter }, fakeCallback);
-//       stdin.emit('data', 'hello\n');
-//       stdin.emit('data', 'world\n');
-//       stdin.emit('end');
-//       sinon.assert.calledOnce(fakeCallback);
-//       assert.deepStrictEqual(fakeCallback.args[0][0], ['hello', 'world']);
-//     });
-//   });
-// });
+    it('should call the callback once with the content', function() {
+      stdin = new EventEmitter();
+      stdin.setEncoding = () => {};
+      readStdin({ stdin, streamWriter }, fakeCallback);
+      stdin.emit('data', 'hello\n');
+      stdin.emit('data', 'world\n');
+      stdin.emit('end');
+      sinon.assert.calledOnce(fakeCallback);
+      assert.deepStrictEqual(fakeCallback.args[0][0], ['hello', 'world']);
+    });
+  });
+});
