@@ -116,7 +116,7 @@ describe('sort', function() {
       }, 0);
     });
 
-    it('should call the callback once with the content', function() {
+    it('should produce the sorted result for the content from stdin', function() {
       const stdin = new EventEmitter();
       stdin.setEncoding = () => {};
       contentLoader = { stdin };

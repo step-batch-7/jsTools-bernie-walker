@@ -1,4 +1,3 @@
-const EventEmitter = require('events');
 const { assert } = require('chai');
 const sinon = require('sinon');
 const { loadFromFile, readStdin } = require('../src/loadContent');
@@ -95,17 +94,6 @@ describe('loadContent', function() {
       readStdin({ stdin, streamWriter }, fakeCallback);
       sinon.assert.calledOnce(stdin.setEncoding);
       sinon.assert.calledTwice(stdin.on);
-    });
-
-    it('should call the callback once with the content', function() {
-      stdin = new EventEmitter();
-      stdin.setEncoding = () => {};
-      readStdin({ stdin, streamWriter }, fakeCallback);
-      stdin.emit('data', 'hello\n');
-      stdin.emit('data', 'world\n');
-      stdin.emit('end');
-      sinon.assert.calledOnce(fakeCallback);
-      assert.deepStrictEqual(fakeCallback.args[0][0], ['hello', 'world']);
     });
   });
 });
