@@ -28,7 +28,7 @@ describe('loadContent', function() {
         sinon.assert.called(fakeCallback);
         sinon.assert.calledWith(
           fakeCallback,
-          ['sampleContent'],
+          'sampleContent\n',
           streamWriter.log
         );
         done();

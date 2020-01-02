@@ -1,7 +1,13 @@
 const { loadFromFile, readStdin } = require('./loadContent');
 
 const sortContent = function(lines, writer) {
-  writer(lines.sort().join('\n'));
+  writer(
+    lines
+      .replace(/\n$/, '')
+      .split('\n')
+      .sort()
+      .join('\n')
+  );
 };
 
 const sort = function(fileName, contentLoader, streamWriter) {

@@ -15,7 +15,7 @@ const loadFromFile = function(fileName, utils, callBack) {
       return;
     }
 
-    callBack(data.replace(/\n$/, '').split('\n'), utils.streamWriter.log);
+    callBack(data, utils.streamWriter.log);
   });
 };
 
@@ -27,9 +27,7 @@ const readStdin = function(utils, callBack) {
     content += chunk;
   });
 
-  utils.stdin.on('end', () =>
-    callBack(content.replace(/\n$/, '').split('\n'), utils.log)
-  );
+  utils.stdin.on('end', () => callBack(content, utils.log));
 };
 
 module.exports = { loadFromFile, readStdin };
