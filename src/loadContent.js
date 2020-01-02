@@ -19,15 +19,15 @@ const loadFromFile = function(fileName, utils, callBack) {
   });
 };
 
-const readStdin = function(utils, callBack) {
+const readStdin = function(stdin, log, callBack) {
   let content = '';
-  utils.stdin.setEncoding('utf8');
+  stdin.setEncoding('utf8');
 
-  utils.stdin.on('data', chunk => {
+  stdin.on('data', chunk => {
     content += chunk;
   });
 
-  utils.stdin.on('end', () => callBack(content, utils.log));
+  stdin.on('end', () => callBack(content, log));
 };
 
 module.exports = { loadFromFile, readStdin };

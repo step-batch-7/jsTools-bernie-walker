@@ -18,7 +18,7 @@ const sort = function(fileName, contentLoader, streamWriter) {
   if (fileName) {
     loadFromFile(fileName, { readFile, streamWriter }, sortContent);
   } else {
-    readStdin({ stdin, log }, sortContent);
+    readStdin(stdin, log, sortContent);
   }
 };
 

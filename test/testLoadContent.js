@@ -69,29 +69,26 @@ describe('loadContent', function() {
   });
 
   describe('readStdin', function() {
-    let stdin, fakeCallback, streamWriter, error;
+    let stdin, fakeCallback, log;
 
     beforeEach(function() {
-      error = sinon.spy();
-      streamWriter = { error, log: () => {} };
-
       fakeCallback = sinon.spy();
       stdin = { setEncoding: sinon.spy(), on: sinon.spy() };
     });
 
     it('should set encoding for stdin', function() {
-      readStdin({ stdin, streamWriter }, fakeCallback);
+      readStdin(stdin, log, fakeCallback);
       sinon.assert.calledWith(stdin.setEncoding, 'utf8');
     });
 
     it('should add handlers for data and close event', function() {
-      readStdin({ stdin, streamWriter }, fakeCallback);
+      readStdin(stdin, log, fakeCallback);
       assert.strictEqual(stdin.on.firstCall.args[0], 'data');
       assert.strictEqual(stdin.on.secondCall.args[0], 'end');
     });
 
     it('on should be called only twice and setEncoding only once', function() {
-      readStdin({ stdin, streamWriter }, fakeCallback);
+      readStdin(stdin, log, fakeCallback);
       sinon.assert.calledOnce(stdin.setEncoding);
       sinon.assert.calledTwice(stdin.on);
     });
