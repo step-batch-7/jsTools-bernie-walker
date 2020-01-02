@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const { sort } = require('../src/sortLib');
 
 describe('sort', function() {
-  let contentLoader, streamWriter;
+  let contentLoader, streamWriter, stdin;
 
   const initStubbedRead = function(stub) {
     stub.withArgs('file').callsArgWithAsync(2, null, 'sampleContent\n');
@@ -17,8 +17,8 @@ describe('sort', function() {
   };
 
   beforeEach(function() {
-    const stdin = { setEncoding: sinon.spy(), on: sinon.spy() };
-    contentLoader = { readFile: () => {}, stdin };
+    stdin = { setEncoding: sinon.spy(), on: sinon.spy() };
+    contentLoader = { readFile: () => {}, getStdin: () => stdin };
     const stubbedRead = sinon.stub(contentLoader, 'readFile');
     initStubbedRead(stubbedRead);
 
@@ -72,19 +72,19 @@ describe('sort', function() {
   context('testing for reading from stdin', function() {
     it('should set encoding for stdin', function() {
       sort(undefined, { contentLoader, streamWriter });
-      sinon.assert.calledWith(contentLoader.stdin.setEncoding, 'utf8');
+      sinon.assert.calledWith(stdin.setEncoding, 'utf8');
     });
 
     it('should add handlers for data and close event', function() {
       sort(undefined, { contentLoader, streamWriter });
-      assert.strictEqual(contentLoader.stdin.on.firstCall.args[0], 'data');
-      assert.strictEqual(contentLoader.stdin.on.secondCall.args[0], 'end');
+      assert.strictEqual(stdin.on.firstCall.args[0], 'data');
+      assert.strictEqual(stdin.on.secondCall.args[0], 'end');
     });
 
     it('on should be called only twice and setEncoding only once', function() {
       sort(undefined, { contentLoader, streamWriter });
-      sinon.assert.calledOnce(contentLoader.stdin.setEncoding);
-      sinon.assert.calledTwice(contentLoader.stdin.on);
+      sinon.assert.calledOnce(stdin.setEncoding);
+      sinon.assert.calledTwice(stdin.on);
     });
   });
 
@@ -119,7 +119,7 @@ describe('sort', function() {
     it('should produce the sorted result for the content from stdin', function() {
       const stdin = new EventEmitter();
       stdin.setEncoding = () => {};
-      contentLoader = { stdin };
+      contentLoader = { getStdin: () => stdin };
       sort(undefined, { contentLoader, streamWriter });
       stdin.emit('data', 'hello\n');
       stdin.emit('data', 'world\n');

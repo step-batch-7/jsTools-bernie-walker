@@ -3,7 +3,7 @@ const { readFile } = require('fs');
 const { sort } = require('./src/sortLib');
 
 const main = function() {
-  const contentLoader = { readFile, stdin };
+  const contentLoader = { readFile, getStdin: () => stdin };
   const streamWriter = {
     log: stream => stdout.write(`${stream}\n`),
     error: stream => stderr.write(`${stream}\n`)

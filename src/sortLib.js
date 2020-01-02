@@ -6,7 +6,7 @@ const sortContent = function(lines, writer) {
 
 const sort = function(userArgs, sortUtils) {
   const streamWriter = sortUtils.streamWriter;
-  const stdin = sortUtils.contentLoader.stdin;
+  const stdin = sortUtils.contentLoader.getStdin();
   const log = streamWriter.log;
   const readFile = sortUtils.contentLoader.readFile;
 
