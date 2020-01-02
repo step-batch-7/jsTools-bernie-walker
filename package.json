@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha",
     "allTests": "mocha && ./runAppTests.sh appTest/*.test",
-    "eslint": "eslint sort.js src/*.js test/*.js"
+    "eslint": "eslint sort.js src/*.js test/*.js",
+    "preCommit": "npm run allTests && npm run eslint"
   },
   "repository": {
     "type": "git",
