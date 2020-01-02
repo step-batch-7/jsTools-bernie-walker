@@ -8,7 +8,7 @@ describe('StreamReader', function() {
   beforeEach(function() {
     createReadStream = sinon.stub();
     createReadStream.withArgs('fileName').returns({ on: 'listener' });
-    stdin = sinon.spy();
+    stdin = { setEncoding: sinon.spy() };
     streamReader = new StreamReader(createReadStream, stdin);
   });
 
@@ -24,6 +24,18 @@ describe('StreamReader', function() {
         sinon.assert.calledWithExactly(createReadStream, 'fileName', {
           encoding: 'utf8'
         });
+      });
+    });
+
+    context('when file name is not given', function() {
+      it('should return stdin stream', function() {
+        const actual = streamReader.read();
+        assert.strictEqual(actual, stdin);
+      });
+
+      it('should set the encoding for stdin', function() {
+        streamReader.read();
+        sinon.assert.calledWithExactly(stdin.setEncoding, 'utf8');
       });
     });
   });
