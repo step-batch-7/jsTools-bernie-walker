@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
-const { StreamReader } = require('../src/sortUtils');
+const { StreamReader, StreamWriter } = require('../src/sortUtils');
 
 describe('StreamReader', function() {
   let streamReader, createReadStream, stdin;
@@ -37,6 +37,33 @@ describe('StreamReader', function() {
         streamReader.read();
         sinon.assert.calledWithExactly(stdin.setEncoding, 'utf8');
       });
+    });
+  });
+});
+
+describe('StreamWriter', function() {
+  let streamWriter, stderrWrite, stdoutWrite;
+
+  beforeEach(function() {
+    const stdout = { write: () => {} };
+    const stderr = { write: () => {} };
+    stderrWrite = sinon.stub(stderr, 'write');
+    stdoutWrite = sinon.stub(stdout, 'write');
+
+    streamWriter = new StreamWriter(stderr, stdout);
+  });
+
+  describe('write', function() {
+    it('should write to error stream when error is given', function() {
+      streamWriter.write('error');
+      sinon.assert.calledWith(stderrWrite, 'error\n');
+      sinon.assert.notCalled(stdoutWrite);
+    });
+
+    it('should write to stdout stream when result is given', function() {
+      streamWriter.write(null, 'result');
+      sinon.assert.calledWith(stdoutWrite, 'result\n');
+      sinon.assert.notCalled(stderrWrite);
     });
   });
 });

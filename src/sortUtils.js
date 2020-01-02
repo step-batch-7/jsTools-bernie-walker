@@ -14,4 +14,19 @@ class StreamReader {
   }
 }
 
-module.exports = { StreamReader };
+class StreamWriter {
+  constructor(stderr, stdout) {
+    this.stderr = stderr;
+    this.stdout = stdout;
+  }
+
+  write(error, result) {
+    if (error) {
+      this.stderr.write(`${error}\n`);
+    } else {
+      this.stdout.write(`${result}\n`);
+    }
+  }
+}
+
+module.exports = { StreamReader, StreamWriter };
