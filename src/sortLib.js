@@ -4,11 +4,10 @@ const sortContent = function(lines, writer) {
   writer(lines.sort().join('\n'));
 };
 
-const sort = function(fileName, sortUtils) {
-  const streamWriter = sortUtils.streamWriter;
-  const stdin = sortUtils.contentLoader.getStdin();
+const sort = function(fileName, contentLoader, streamWriter) {
+  const stdin = contentLoader.getStdin();
   const log = streamWriter.log;
-  const readFile = sortUtils.contentLoader.readFile;
+  const readFile = contentLoader.readFile;
 
   if (fileName) {
     loadFromFile(fileName, { readFile, streamWriter }, sortContent);

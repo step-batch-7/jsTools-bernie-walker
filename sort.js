@@ -10,7 +10,7 @@ const main = function() {
   };
 
   const [, , fileName] = process.argv;
-  sort(fileName, { contentLoader, streamWriter });
+  sort(fileName, contentLoader, streamWriter);
 };
 
 main();

@@ -33,7 +33,7 @@ describe('sort', function() {
 
   context('testing for loading from files', function() {
     it('should callback with lines of the file if exists', function(done) {
-      sort('file', { contentLoader, streamWriter });
+      sort('file', contentLoader, streamWriter);
       setTimeout(() => {
         assert.strictEqual(streamWriter.log.args[0][0], 'sampleContent');
         done();
@@ -42,7 +42,7 @@ describe('sort', function() {
 
     it('should generate error given wrong file name', function(done) {
       const expected = 'sort: No such file or directory';
-      sort('badFile', { contentLoader, streamWriter });
+      sort('badFile', contentLoader, streamWriter);
       setTimeout(() => {
         sinon.assert.notCalled(streamWriter.log);
         sinon.assert.calledWith(streamWriter.error, expected);
@@ -51,7 +51,7 @@ describe('sort', function() {
     });
 
     it('should give error when given fileName is a directory', function(done) {
-      sort('dir', { contentLoader, streamWriter });
+      sort('dir', contentLoader, streamWriter);
       setTimeout(() => {
         sinon.assert.notCalled(streamWriter.log);
         sinon.assert.calledWith(streamWriter.error, 'sort: Is a directory');
@@ -60,7 +60,7 @@ describe('sort', function() {
     });
 
     it('should give error when the file has no read permission', function(done) {
-      sort('perm', { contentLoader, streamWriter });
+      sort('perm', contentLoader, streamWriter);
       setTimeout(() => {
         sinon.assert.notCalled(streamWriter.log);
         sinon.assert.calledWith(streamWriter.error, 'sort: Permission denied');
@@ -71,18 +71,18 @@ describe('sort', function() {
 
   context('testing for reading from stdin', function() {
     it('should set encoding for stdin', function() {
-      sort(undefined, { contentLoader, streamWriter });
+      sort(undefined, contentLoader, streamWriter);
       sinon.assert.calledWith(stdin.setEncoding, 'utf8');
     });
 
     it('should add handlers for data and close event', function() {
-      sort(undefined, { contentLoader, streamWriter });
+      sort(undefined, contentLoader, streamWriter);
       assert.strictEqual(stdin.on.firstCall.args[0], 'data');
       assert.strictEqual(stdin.on.secondCall.args[0], 'end');
     });
 
     it('on should be called only twice and setEncoding only once', function() {
-      sort(undefined, { contentLoader, streamWriter });
+      sort(undefined, contentLoader, streamWriter);
       sinon.assert.calledOnce(stdin.setEncoding);
       sinon.assert.calledTwice(stdin.on);
     });
@@ -91,7 +91,7 @@ describe('sort', function() {
   context('testing for sorting behaviour', function() {
     it('should produce sorted result when the path is right', function(done) {
       const expected = '1\nB\na\nc';
-      sort('file1', { contentLoader, streamWriter });
+      sort('file1', contentLoader, streamWriter);
       setTimeout(() => {
         sinon.assert.calledWith(streamWriter.log, expected);
         done();
@@ -100,7 +100,7 @@ describe('sort', function() {
 
     it('should ignore only the last newLine of the fileContent', function(done) {
       const expected = '\n1\nab\nx';
-      sort('file2', { contentLoader, streamWriter });
+      sort('file2', contentLoader, streamWriter);
       setTimeout(() => {
         sinon.assert.calledWith(streamWriter.log, expected);
         done();
@@ -109,7 +109,7 @@ describe('sort', function() {
 
     it('should produce the empty string for empty file', function(done) {
       const expected = '';
-      sort('empty', { contentLoader, streamWriter });
+      sort('empty', contentLoader, streamWriter);
       setTimeout(() => {
         sinon.assert.calledWith(streamWriter.log, expected);
         done();
@@ -120,7 +120,7 @@ describe('sort', function() {
       const stdin = new EventEmitter();
       stdin.setEncoding = () => {};
       contentLoader = { getStdin: () => stdin };
-      sort(undefined, { contentLoader, streamWriter });
+      sort(undefined, contentLoader, streamWriter);
       stdin.emit('data', 'hello\n');
       stdin.emit('data', 'world\n');
       stdin.emit('end');
