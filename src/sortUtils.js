@@ -6,7 +6,7 @@ class StreamReader {
 
   read(fileName) {
     if (fileName) {
-      return this.createReadStream('fileName', { encoding: 'utf8' });
+      return this.createReadStream(fileName, { encoding: 'utf8' });
     }
 
     this.stdin.setEncoding('utf8');

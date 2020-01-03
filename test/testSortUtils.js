@@ -7,7 +7,7 @@ describe('StreamReader', function() {
 
   beforeEach(function() {
     createReadStream = sinon.stub();
-    createReadStream.withArgs('fileName').returns({ on: 'listener' });
+    createReadStream.withArgs('file1').returns({ on: 'listener' });
     stdin = { setEncoding: sinon.spy() };
     streamReader = new StreamReader(createReadStream, stdin);
   });
@@ -15,7 +15,7 @@ describe('StreamReader', function() {
   describe('read', function() {
     context('when file name is  given', function() {
       it('should return the created readStream', function() {
-        const actual = streamReader.read('fileName');
+        const actual = streamReader.read('file1');
         assert.deepStrictEqual(actual, { on: 'listener' });
       });
 
