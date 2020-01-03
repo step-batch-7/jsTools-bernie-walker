@@ -19,7 +19,7 @@ describe('StreamReader', function() {
         assert.deepStrictEqual(actual, { on: 'listener' });
       });
 
-      it('should call the createReadStream with file name and encoding', function() {
+      it('must invoke createReadStream with fileName and encoding', function() {
         streamReader.read('fileName');
         sinon.assert.calledWithExactly(createReadStream, 'fileName', {
           encoding: 'utf8'
