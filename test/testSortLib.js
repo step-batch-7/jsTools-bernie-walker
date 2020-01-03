@@ -1,130 +1,88 @@
-const EventEmitter = require('events');
 const { assert } = require('chai');
 const sinon = require('sinon');
 const { sort } = require('../src/sortLib');
 
 describe('sort', function() {
-  let contentLoader, streamWriter, stdin;
-
-  const initStubbedRead = function(stub) {
-    stub.withArgs('file').callsArgWithAsync(2, null, 'sampleContent\n');
-    stub.withArgs('file1').callsArgWithAsync(2, null, 'a\nc\nB\n1\n');
-    stub.withArgs('file2').callsArgWithAsync(2, null, '1\nab\nx\n\n');
-    stub.withArgs('empty').callsArgWithAsync(2, null, '');
-    stub.withArgs('badFile').callsArgWithAsync(2, { code: 'ENOENT' });
-    stub.withArgs('dir').callsArgWithAsync(2, { code: 'EISDIR' });
-    stub.withArgs('perm').callsArgWithAsync(2, { code: 'EACCES' });
-  };
+  let streamReader, read, on;
 
   beforeEach(function() {
-    stdin = { setEncoding: sinon.spy(), on: sinon.spy() };
-    contentLoader = { readFile: () => {}, getStdin: () => stdin };
-    const stubbedRead = sinon.stub(contentLoader, 'readFile');
-    initStubbedRead(stubbedRead);
-
-    const log = sinon.spy();
-    const error = sinon.spy();
-    streamWriter = { log, error };
+    read = sinon.stub();
+    on = sinon.stub();
+    read.returns({ on });
+    streamReader = { read };
   });
 
-  afterEach(function() {
-    sinon.restore();
-  });
-
-  context('testing for loading from files', function() {
-    it('should callback with lines of the file if exists', function(done) {
-      sort('file', contentLoader, streamWriter);
-      setTimeout(() => {
-        assert.strictEqual(streamWriter.log.args[0][0], 'sampleContent');
-        done();
-      });
-    }, 0);
-
-    it('should generate error given wrong file name', function(done) {
-      const expected = 'sort: No such file or directory';
-      sort('badFile', contentLoader, streamWriter);
-      setTimeout(() => {
-        sinon.assert.notCalled(streamWriter.log);
-        sinon.assert.calledWith(streamWriter.error, expected);
-        done();
-      }, 0);
+  context('testing for the initializing behaviour of the function', function() {
+    it('should call the read method of stream reader', function() {
+      sort('file', streamReader);
+      sinon.assert.called(read);
     });
 
-    it('should give error when given fileName is a directory', function(done) {
-      sort('dir', contentLoader, streamWriter);
-      setTimeout(() => {
-        sinon.assert.notCalled(streamWriter.log);
-        sinon.assert.calledWith(streamWriter.error, 'sort: Is a directory');
-        done();
-      }, 0);
+    it('should add the handler for error event of stream emitter', function() {
+      sort('file', streamReader);
+      assert.strictEqual(on.args[0][0], 'error');
     });
 
-    it('should give error when the file has no read permission', function(done) {
-      sort('perm', contentLoader, streamWriter);
-      setTimeout(() => {
-        sinon.assert.notCalled(streamWriter.log);
-        sinon.assert.calledWith(streamWriter.error, 'sort: Permission denied');
-        done();
-      }, 0);
+    it('should add the data handler on the second call', function() {
+      sort('file', streamReader);
+      assert.strictEqual(on.args[1][0], 'data');
+    });
+
+    it('should add the end handler on the third call', function() {
+      sort('file', streamReader);
+      assert.strictEqual(on.args[2][0], 'end');
     });
   });
 
-  context('testing for reading from stdin', function() {
-    it('should set encoding for stdin', function() {
-      sort(undefined, contentLoader, streamWriter);
-      sinon.assert.calledWith(stdin.setEncoding, 'utf8');
+  context('when invalid file name is given', function() {
+    let streamWriter;
+
+    beforeEach(function() {
+      const write = sinon.spy();
+      streamWriter = { write };
     });
 
-    it('should add handlers for data and close event', function() {
-      sort(undefined, contentLoader, streamWriter);
-      assert.strictEqual(stdin.on.firstCall.args[0], 'data');
-      assert.strictEqual(stdin.on.secondCall.args[0], 'end');
+    it('should call the writer with bad fileName error', function() {
+      on.onFirstCall().callsArgWith(1, { code: 'ENOENT' });
+      sort('fileName', streamReader, streamWriter);
+      sinon.assert.calledWith(
+        streamWriter.write,
+        'sort: No such file or directory'
+      );
     });
 
-    it('on should be called only twice and setEncoding only once', function() {
-      sort(undefined, contentLoader, streamWriter);
-      sinon.assert.calledOnce(stdin.setEncoding);
-      sinon.assert.calledTwice(stdin.on);
+    it('should call the writer with bad directory error', function() {
+      on.onFirstCall().callsArgWith(1, { code: 'EISDIR' });
+      sort('fileName', streamReader, streamWriter);
+      sinon.assert.calledWith(streamWriter.write, 'sort: Is a directory');
+    });
+
+    it('should call the writer with no permission error', function() {
+      on.onFirstCall().callsArgWith(1, { code: 'EACCES' });
+      sort('fileName', streamReader, streamWriter);
+      sinon.assert.calledWith(streamWriter.write, 'sort: Permission denied');
     });
   });
 
-  context('testing for sorting behaviour', function() {
-    it('should produce sorted result when the path is right', function(done) {
-      const expected = '1\nB\na\nc';
-      sort('file1', contentLoader, streamWriter);
-      setTimeout(() => {
-        sinon.assert.calledWith(streamWriter.log, expected);
-        done();
-      }, 0);
+  context('checking for sorting behaviour of sortContent', function() {
+    let write, streamWriter;
+
+    beforeEach(function() {
+      write = sinon.spy();
+      streamWriter = { write };
+      on.onSecondCall().callsArgWith(1, 'a\nB\n1\n\n');
+      on.onThirdCall().callsArg(1);
     });
 
-    it('should ignore only the last newLine of the fileContent', function(done) {
-      const expected = '\n1\nab\nx';
-      sort('file2', contentLoader, streamWriter);
-      setTimeout(() => {
-        sinon.assert.calledWith(streamWriter.log, expected);
-        done();
-      }, 0);
+    it('should call the writer with sorted content', function() {
+      sort('fileName', streamReader, streamWriter);
+      sinon.assert.calledWith(streamWriter.write, null, '\n1\nB\na');
     });
 
-    it('should produce the empty string for empty file', function(done) {
-      const expected = '';
-      sort('empty', contentLoader, streamWriter);
-      setTimeout(() => {
-        sinon.assert.calledWith(streamWriter.log, expected);
-        done();
-      }, 0);
-    });
-
-    it('should produce the sorted result for the content from stdin', function() {
-      const stdin = new EventEmitter();
-      stdin.setEncoding = () => {};
-      contentLoader = { getStdin: () => stdin };
-      sort(undefined, contentLoader, streamWriter);
-      stdin.emit('data', 'hello\n');
-      stdin.emit('data', 'world\n');
-      stdin.emit('end');
-      assert.strictEqual(streamWriter.log.args[0][0], 'hello\nworld');
+    it('should give the result as empty string for an emptyFile', function() {
+      on.onSecondCall().callsArgWith(1, '');
+      sort('fileName', streamReader, streamWriter);
+      sinon.assert.calledWith(streamWriter.write, null, '');
     });
   });
 });
