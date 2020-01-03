@@ -28,4 +28,13 @@ node sort.js < echo "a\n1\nB"
   --done-- add a branching to read from stdin in loadContent.
   --done-- test with having to read from stdin.
   --done-- make loadFile responsible for displaying error. 
+
+
+refactoring v0.2.0
+
+  * modify sort to return.
+  * create a new loadContent in utils to initialize the load the content and send it to sortContent. 
+  * make loadContent to display the result in the end block.
+  * modify the tests for sortLib.
+  * wire everything up.
     
